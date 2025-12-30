@@ -2,7 +2,31 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### Koble til GitHub (anbefalt)
+
+Før du deployer, kan det være lurt å koble prosjektet til GitHub. Se [GITHUB_SETUP.md](./GITHUB_SETUP.md) for steg-for-steg instruksjoner.
+
+### Installerer avhengigheter
+
+Først, installer nødvendige pakker:
+
+```bash
+npm install
+```
+
+### Konfigurere Vercel Blob
+
+For å bruke bildeopplasting må du sette opp Vercel Blob. Dette er en tjeneste som lagrer bildene dine.
+
+**📖 Se [SETUP.md](./SETUP.md) for detaljerte instruksjoner!**
+
+**Kortversjon:**
+- **Hvis du deployer til Vercel**: Aktiver Blob Storage i Vercel Dashboard → Storage → Create Blob Store
+- **For lokal testing**: Se SETUP.md for steg-for-steg guide
+
+### Kjøre utviklingsserveren
+
+Kjør utviklingsserveren:
 
 ```bash
 npm run dev
@@ -14,9 +38,9 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Åpne [http://localhost:3000](http://localhost:3000) i nettleseren for å se resultatet.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Du kan laste opp bilder ved å dra og slippe dem i opplastingsområdet, eller ved å klikke på "Velg bilde"-knappen.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
