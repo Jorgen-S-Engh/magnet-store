@@ -14,15 +14,19 @@ Først, installer nødvendige pakker:
 npm install
 ```
 
-### Konfigurere Vercel Blob
+### Deploy til Vercel og sett opp Blob Storage
 
-For å bruke bildeopplasting må du sette opp Vercel Blob. Dette er en tjeneste som lagrer bildene dine.
+Nå som prosjektet er på GitHub, kan du deploye til Vercel:
 
-**📖 Se [SETUP.md](./SETUP.md) for detaljerte instruksjoner!**
+**📖 Se [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md) for steg-for-steg instruksjoner!**
 
 **Kortversjon:**
-- **Hvis du deployer til Vercel**: Aktiver Blob Storage i Vercel Dashboard → Storage → Create Blob Store
-- **For lokal testing**: Se SETUP.md for steg-for-steg guide
+1. Gå til [vercel.com](https://vercel.com) → "Add New Project" → Velg ditt GitHub repository
+2. Klikk "Deploy"
+3. Etter deploy: Gå til "Storage" → "Create" → "Blob"
+4. Ferdig! Tokenet settes automatisk.
+
+**For lokal testing:** Se [SETUP.md](./SETUP.md)
 
 ### Kjøre utviklingsserveren
 

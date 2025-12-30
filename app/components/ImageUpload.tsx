@@ -16,6 +16,13 @@ export default function ImageUpload() {
       return;
     }
 
+    // Valider filstørrelse (4.5 MB limit for server uploads)
+    const maxSize = 4.5 * 1024 * 1024; // 4.5 MB
+    if (file.size > maxSize) {
+      setError('Filen er for stor. Maksimal størrelse er 4.5 MB.');
+      return;
+    }
+
     setUploading(true);
     setError(null);
 
