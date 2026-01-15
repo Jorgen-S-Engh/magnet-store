@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ImageUpload from './components/ImageUpload';
 import Cart from './components/Cart';
@@ -12,11 +12,8 @@ const PACKAGE_OPTIONS = [
   { size: 12, label: '12 magneter' },
 ];
 
-export default function Home() {
-  const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
-  const [confirmedImages, setConfirmedImages] = useState<string[] | null>(null);
+function SuccessMessage() {
   const [showSuccess, setShowSuccess] = useState(false);
-  const { addItem } = useCartStore();
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -29,6 +26,22 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [searchParams]);
+
+  if (!showSuccess) return null;
+
+  return (
+    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+      <p className="text-sm text-green-800 dark:text-green-200 font-medium">
+        ✓ Bestillingen din er sendt! Takk for handelen.
+      </p>
+    </div>
+  );
+}
+
+export default function Home() {
+  const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
+  const [confirmedImages, setConfirmedImages] = useState<string[] | null>(null);
+  const { addItem } = useCartStore();
 
   const handleConfirm = (imageUrls: string[]) => {
     if (!selectedPackage) return;
@@ -57,13 +70,9 @@ export default function Home() {
             </p>
           </div>
 
-          {showSuccess && (
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-              <p className="text-sm text-green-800 dark:text-green-200 font-medium">
-                ✓ Bestillingen din er sendt! Takk for handelen.
-              </p>
-            </div>
-          )}
+          <Suspense fallback={null}>
+            <SuccessMessage />
+          </Suspense>
 
           <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-800 p-6">
             <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
