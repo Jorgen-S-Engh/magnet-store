@@ -36,7 +36,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const maxSize = 4.5 * 1024 * 1024; // 4.5 MB
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: 'Filen er for stor. Maksimal størrelse er 4.5 MB for server uploads.' },
+        { error: 'Filen er for stor. Maksimal størrelse er 4.5 MB' },
         { status: 400 }
       );
     }

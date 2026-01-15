@@ -5,9 +5,10 @@ import Image from 'next/image';
 
 export interface ImageUploadProps {
   requiredCount: number;
+  onConfirm?: (imageUrls: string[]) => void;
 }
 
-export default function ImageUpload({ requiredCount }: ImageUploadProps) {
+export default function ImageUpload({ requiredCount, onConfirm }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -116,6 +117,11 @@ export default function ImageUpload({ requiredCount }: ImageUploadProps) {
     }
   };
 
+  const handleRemoveImage = (indexToRemove: number) => {
+    setUploadedImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+    setError(null);
+  };
+
   const onButtonClick = () => {
     fileInputRef.current?.click();
   };
@@ -140,7 +146,7 @@ export default function ImageUpload({ requiredCount }: ImageUploadProps) {
           onChange={handleChange}
           multiple
           className="hidden"
-          disabled={uploading || uploadedImages.length >= requiredCount}
+          disabled={uploading}
         />
         <div className="space-y-4">
           <svg
@@ -161,21 +167,16 @@ export default function ImageUpload({ requiredCount }: ImageUploadProps) {
             <button
               type="button"
               onClick={onButtonClick}
-              disabled={uploading || uploadedImages.length >= requiredCount}
+              disabled={uploading}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading 
                 ? `Laster opp... (${uploadedImages.length}/${requiredCount})`
-                : uploadedImages.length >= requiredCount
-                ? `Alle ${requiredCount} bilder er lastet opp`
                 : `Velg bilder (${uploadedImages.length}/${requiredCount})`
               }
             </button>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              {uploadedImages.length >= requiredCount
-                ? 'Du kan laste opp flere bilder ved å velge på nytt'
-                : 'eller dra og slipp bilder her (du kan velge flere samtidig)'
-              }
+              eller dra og slipp bilder her (du kan velge flere samtidig)
             </p>
           </div>
         </div>
@@ -205,7 +206,7 @@ export default function ImageUpload({ requiredCount }: ImageUploadProps) {
             {uploadedImages.map((url, index) => (
               <div
                 key={index}
-                className="relative aspect-square rounded-lg overflow-hidden border-2 border-zinc-200 dark:border-zinc-800 group"
+                className="relative aspect-square rounded-lg overflow-hidden border-2 border-zinc-200 dark:border-zinc-800 group cursor-pointer"
               >
                 <Image
                   src={url}
@@ -222,14 +223,59 @@ export default function ImageUpload({ requiredCount }: ImageUploadProps) {
                 <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
                   {index + 1}
                 </div>
+                {/* Hover overlay with trash can icon */}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveImage(index);
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    aria-label="Fjern bilde"
+                  >
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
           {uploadedImages.length >= requiredCount && (
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-              <p className="text-sm text-green-800 dark:text-green-200 font-medium">
-                ✓ Alle {requiredCount} bilder er lastet opp! Du kan nå fortsette med bestillingen.
-              </p>
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-green-800 dark:text-green-200 font-medium mb-1">
+                    ✓ Alle {requiredCount} bilder er lastet opp!
+                  </p>
+                  <p className="text-xs text-green-700 dark:text-green-300">
+                    Sjekk at alle bildene er korrekte før du går videre.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onConfirm && uploadedImages.length === requiredCount) {
+                      onConfirm(uploadedImages);
+                    }
+                  }}
+                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Bekreft og gå videre
+                </button>
+              </div>
             </div>
           )}
         </div>
