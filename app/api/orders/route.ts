@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put, list } from '@vercel/blob';
 
+export interface DeliveryAddress {
+  street: string;
+  postalCode: string;
+  city: string;
+}
+
 export interface Order {
   id: string;
   customerName: string;
   packageSize: number;
   images: string[];
+  deliveryAddress?: DeliveryAddress;
   createdAt: string;
 }
 
@@ -19,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { customerName, packageSize, images } = body;
+    const { customerName, packageSize, images, deliveryAddress } = body;
 
     // Validering
     if (!customerName || typeof customerName !== 'string' || customerName.trim().length === 0) {
@@ -49,6 +56,13 @@ export async function POST(request: NextRequest) {
       customerName: customerName.trim(),
       packageSize,
       images,
+      ...(deliveryAddress && {
+        deliveryAddress: {
+          street: deliveryAddress.street?.trim() || '',
+          postalCode: deliveryAddress.postalCode?.trim() || '',
+          city: deliveryAddress.city?.trim() || '',
+        },
+      }),
       createdAt: new Date().toISOString(),
     };
 

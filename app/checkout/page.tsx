@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../store/cartStore';
-import CustomerForm from '../components/CustomerForm';
+import CustomerForm, { type DeliveryAddress } from '../components/CustomerForm';
 
 export default function Checkout() {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (customerName: string) => {
+  const handleSubmit = async (customerName: string, deliveryAddress?: DeliveryAddress) => {
     if (items.length === 0) {
       setError('Handlekurven er tom');
       return;
@@ -32,6 +32,7 @@ export default function Checkout() {
             customerName,
             packageSize: item.packageSize,
             images: item.images,
+            deliveryAddress,
           }),
         })
       );
@@ -92,7 +93,7 @@ export default function Checkout() {
               Checkout
             </h1>
             <p className="text-lg text-zinc-600 dark:text-zinc-400">
-              Skriv inn kundenavn for å fullføre bestillingen
+              Skriv inn kundenavn og leveringsadresse for å fullføre bestillingen
             </p>
           </div>
 
@@ -115,6 +116,9 @@ export default function Checkout() {
               onSubmit={handleSubmit}
               onCancel={() => router.push('/')}
               isLoading={isSubmitting}
+              includeDeliveryAddress={true}
+              submitButtonText="Fullfør bestilling"
+              loadingButtonText="Sender bestilling..."
             />
           </div>
         </div>
