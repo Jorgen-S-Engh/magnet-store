@@ -5,6 +5,8 @@ export interface DeliveryAddress {
   street: string;
   postalCode: string;
   city: string;
+  email: string;
+  phone?: string;
 }
 
 export interface Order {
@@ -61,6 +63,8 @@ export async function POST(request: NextRequest) {
           street: deliveryAddress.street?.trim() || '',
           postalCode: deliveryAddress.postalCode?.trim() || '',
           city: deliveryAddress.city?.trim() || '',
+          email: deliveryAddress.email?.trim() || '',
+          phone: deliveryAddress.phone?.trim() || undefined,
         },
       }),
       createdAt: new Date().toISOString(),
