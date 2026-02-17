@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import ImageUpload from './components/ImageUpload';
 import Cart from './components/Cart';
 import { useCartStore } from './store/cartStore';
-import TestCustomerForm from './components/TestCustomerForm';
 
 const PACKAGE_OPTIONS = [
   { size: 6, label: '6 magneter' },
@@ -20,9 +19,7 @@ function SuccessMessage() {
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
       setShowSuccess(true);
-      // Fjern query parameter fra URL
       window.history.replaceState({}, '', '/');
-      // Skjul meldingen etter 5 sekunder
       const timer = setTimeout(() => setShowSuccess(false), 5000);
       return () => clearTimeout(timer);
     }
@@ -116,7 +113,6 @@ export default function Home() {
 
           <Cart />
         </div>
-        <TestCustomerForm />
       </main>
     </div>
   );

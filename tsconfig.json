@@ -24,6 +24,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "hookform-resolvers.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
