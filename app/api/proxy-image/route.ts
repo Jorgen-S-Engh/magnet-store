@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminToken } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  if (!verifyAdminToken(token)) {
+    return NextResponse.json({ error: 'Krever innlogging' }, { status: 401 });
+  }
+
   const url = request.nextUrl.searchParams.get('url');
   if (!url) {
     return NextResponse.json({ error: 'Mangler url' }, { status: 400 });

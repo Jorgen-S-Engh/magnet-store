@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put, list } from '@vercel/blob';
+import { verifyAdminToken } from '@/lib/auth';
 
 export interface DeliveryAddress {
   street: string;
@@ -108,6 +109,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    if (!verifyAdminToken(token)) {
+      return NextResponse.json({ error: 'Krever innlogging' }, { status: 401 });
+    }
+
     if (!process.env.BLOB_READ_WRITE_TOKEN) {
       return NextResponse.json(
         { error: 'Vercel Blob er ikke konfigurert' },

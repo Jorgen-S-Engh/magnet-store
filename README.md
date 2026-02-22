@@ -28,6 +28,18 @@ Nå som prosjektet er på GitHub, kan du deploye til Vercel:
 
 **For lokal testing:** Se [SETUP.md](./SETUP.md)
 
+### Admin-panel og passord
+
+Admin-panelet på `/admin` er beskyttet med passord. Sett miljøvariabelen `ADMIN_PASSWORD`:
+
+- **Lokalt:** Legg til i `.env.local`:
+  ```
+  ADMIN_PASSWORD=ditt-sikre-passord
+  ```
+- **Vercel:** Gå til prosjektet → Settings → Environment Variables → legg til `ADMIN_PASSWORD`
+
+Uten denne variabelen vil admin-innlogging ikke fungere.
+
 ### Kjøre utviklingsserveren
 
 Kjør utviklingsserveren:
